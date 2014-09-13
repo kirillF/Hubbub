@@ -4,7 +4,7 @@ package com.grails
 class UserIntegrationTest extends GroovyTestCase {
 
     void testUserPersistence() {
-        def user = new User(userId: 'joe', password: 'password', homepage: "http://home.page")
+        def user = new User(userId: 'joe', password: 'password')
         assertNotNull(user.save())
         assertNotNull(user.id)
 
@@ -13,7 +13,7 @@ class UserIntegrationTest extends GroovyTestCase {
     }
 
     void testSaveAndUpdate() {
-        def user = new User(userId: 'joe', password: 'password', homepage: 'http://home.page')
+        def user = new User(userId: 'joe', password: 'password')
         assertNotNull(user.save())
 
         def foundUser = User.get(user.id)
@@ -25,7 +25,7 @@ class UserIntegrationTest extends GroovyTestCase {
     }
 
     void testDeleteUser() {
-        def user = new User(userId: 'joe', password: 'password', homepage: 'http://home.page')
+        def user = new User(userId: 'joe', password: 'password')
         assertNotNull(user.save())
 
         def foundUser = User.get(user.id)
@@ -35,7 +35,7 @@ class UserIntegrationTest extends GroovyTestCase {
     }
 
     void testEvilSave() {
-        def user = new User(userId: 'chuck_norris', password: 'tiny', homepage: 'not-a-url')
+        def user = new User(userId: 'chuck_norris', password: 'tiny')
         assertFalse(user.validate())
         assertTrue(user.hasErrors())
 
@@ -44,23 +44,31 @@ class UserIntegrationTest extends GroovyTestCase {
         assertEquals("size.toosmall", errors.getFieldError("password").code)
         assertEquals("tiny", errors.getFieldError("password").rejectedValue)
 
-        assertEquals("url.invalid", errors.getFieldError("url").code)
-        assertEquals("not-a-url", errors.getFieldError("url").rejectedValue)
-
         assertNull(errors.getFieldError("userId"))
     }
 
     void testEvilSaveCorrected() {
-        def user = new User(userId: 'chuck_norris', password: 'tiny', homepage: 'not-a-url')
+        def user = new User(userId: 'chuck_norris', password: 'tiny')
         assertFalse(user.validate())
         assertTrue(user.hasErrors())
 
         assertNull(user.save())
 
         user.password = "fistfist"
-        user.homepage = "http://www.chucknorrisfacts.com"
         assertTrue(user.validate())
         assertFalse(user.hasErrors())
         assertNotNull(user.save())
+    }
+
+    void testPasswordEqualsUserId() {
+        def user = new User(userId: 'chuck_no', password: 'chuck_no')
+        assertFalse(user.validate())
+        assertTrue(user.hasErrors())
+
+        assertNull(user.save())
+
+        def errors = user.errors
+
+        assertEquals('validator.invalid', errors.getFieldError("password").code)
     }
 }
