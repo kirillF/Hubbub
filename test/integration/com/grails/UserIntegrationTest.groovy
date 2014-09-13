@@ -1,14 +1,9 @@
 package com.grails
 
-import com.grails.User
-import grails.test.GrailsUnitTestCase
 
-import static org.junit.Assert.*;
+class UserIntegrationTest extends GroovyTestCase {
 
-class UserIntegrationSpec extends GrailsUnitTestCase {
-
-
-    void testSave() {
+    void testUserPersistence() {
         def user = new User(userId: 'joe', password: 'password', homepage: "http://home.page")
         assertNotNull(user.save())
         assertNotNull(user.id)
