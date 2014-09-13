@@ -19,5 +19,5 @@ class User {
         profile lazy: false
     }
 
-    static hasMany = [ posts : Post ]
+    static hasMany = [ posts : Post, tags: Tag, following: User ]
 }

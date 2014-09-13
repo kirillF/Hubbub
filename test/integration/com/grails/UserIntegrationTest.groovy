@@ -71,4 +71,19 @@ class UserIntegrationTest extends GroovyTestCase {
 
         assertEquals('validator.invalid', errors.getFieldError("password").code)
     }
+
+    void testFollowing() {
+        def user = new User(userId: 'joe', password: 'secret').save()
+        def peter = new User(userId: 'Peter', password: 'secret').save()
+        def swan = new User(userId: 'Swan', password: 'secret').save()
+
+        user.addToFollowing(peter)
+        user.addToFollowing(swan)
+
+        assertEquals(2, user.following.size())
+
+        swan.addToFollowing(peter)
+
+        assertEquals(1, swan.following.size())
+    }
 }

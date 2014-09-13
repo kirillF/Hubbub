@@ -13,4 +13,6 @@ class Post {
     static mapping = {
         sort dateCreated: "desc"
     }
+
+    static hasMany = [ tags: Tag ]
 }

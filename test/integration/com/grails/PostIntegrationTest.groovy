@@ -24,4 +24,29 @@ class PostIntegrationTest extends GroovyTestCase {
 
         assertEquals(['First', 'Second', 'Third'], postNames.sort())
     }
+
+    void testPostWithTags() {
+        def user = new User(userId: 'joe', password: 'secret').save()
+
+        def tagGroovy= new Tag(name: 'Groovy')
+        def tagGrails = new Tag(name: 'Grails')
+        user.addToTags(tagGrails)
+        user.addToTags(tagGroovy)
+
+        def tagNames = user.tags*.name
+        assertEquals(['Grails', 'Groovy'], tagNames.sort())
+
+        def groovyPost = new Post(content: 'A groovy post')
+        user.addToPosts(groovyPost)
+        groovyPost.addToTags(tagGroovy)
+
+        assertEquals(1, groovyPost.tags.size())
+
+        def bothPost = new Post(content: 'Grails post')
+        user.addToPosts(bothPost)
+        bothPost.addToTags(tagGroovy)
+        bothPost.addToTags(tagGrails)
+
+        assertEquals(2, bothPost.tags.size())
+    }
 }
