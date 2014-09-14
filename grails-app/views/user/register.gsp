@@ -26,7 +26,14 @@
             <dt>Bio</dt>
             <dd><g:textArea name="bio" value="${user?.profile?.bio}" /></dd>
             <dt>Email</dt>
-            <dd><g:textField name="email" value="${user?.profile?.email}"/></dd>
+            <dd>
+                <g:textField name="email" value="${user?.profile?.email}"/>
+                <g:hasErrors bean="${user}" field="profile.email">
+                    <p style="color: red;"><g:message error="${it}"/></p>
+                    </g:hasErrors>
+                </g:hasErrors>
+            </dd>
+
             <g:submitButton name="register" value="Register" />
         </dl>
     </g:form>
